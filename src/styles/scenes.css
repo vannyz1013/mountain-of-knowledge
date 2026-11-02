@@ -1,0 +1,791 @@
+/* ---------------- Backdrop ---------------- */
+.sky {
+  inset: 0;
+  background: linear-gradient(180deg, #060a13 0%, var(--bg) 34%, var(--navy) 74%, var(--shadow) 100%);
+}
+
+#stars,
+#motes {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.moon-glow {
+  left: 50%;
+  top: -14vh;
+  width: 110vmax;
+  height: 90vh;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgb(139 220 245 / 0.13), transparent);
+  transition: opacity 2s;
+}
+
+.warm-glow {
+  left: 50%;
+  top: 10vh;
+  width: 130vmin;
+  height: 90vh;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgb(255 201 122 / 0.2), transparent);
+  opacity: 0;
+  transition: opacity 3s;
+}
+
+.warm .warm-glow {
+  opacity: 1;
+}
+
+.warm .moon-glow {
+  opacity: 0.35;
+}
+
+.ridges {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48vh;
+  background: url("/images/mountain/ridges.webp") center bottom / auto 100% repeat-x;
+  opacity: 0.9;
+  transform: translateY(0);
+  transition: transform 2.6s cubic-bezier(0.3, 0, 0.2, 1), opacity 2.6s;
+}
+
+[data-scene="3"] .ridges,
+[data-scene="4"] .ridges {
+  opacity: 0.4;
+}
+
+#world {
+  inset: 0;
+  overflow: hidden;
+  transition: opacity 2.4s ease, filter 2.4s ease;
+}
+
+[data-scene="1"] #world {
+  opacity: 0.5;
+  filter: brightness(0.62) saturate(0.8);
+}
+
+.camera {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1000px;
+  height: 800px;
+  transform-origin: 0 0;
+  transition: transform 2.4s cubic-bezier(0.32, 0, 0.16, 1);
+}
+
+.camera svg {
+  display: block;
+  overflow: visible;
+}
+
+.fog {
+  left: -30%;
+  right: -30%;
+  bottom: -6vh;
+  height: 34vh;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 34% 62% at 22% 74%, rgb(40 72 106 / 0.5), transparent),
+    radial-gradient(ellipse 44% 54% at 70% 82%, rgb(40 72 106 / 0.42), transparent);
+}
+
+.fog-b {
+  bottom: -12vh;
+  height: 26vh;
+  background:
+    radial-gradient(ellipse 40% 70% at 44% 80%, rgb(30 58 90 / 0.62), transparent),
+    radial-gradient(ellipse 30% 60% at 86% 70%, rgb(30 58 90 / 0.5), transparent);
+}
+
+/* ---------------- Interface ---------------- */
+#interface {
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.7s ease, visibility 0s linear 0.7s;
+}
+
+.scene.active {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0.45s, 0s;
+}
+
+.scene button {
+  pointer-events: auto;
+}
+
+.scene-nav {
+  position: absolute;
+  top: max(10px, env(safe-area-inset-top));
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 44px;
+  padding: 0 12px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(234 243 250 / 0.72);
+  pointer-events: auto;
+  transition: color 0.3s, opacity 0.4s;
+}
+
+.back-button::before {
+  content: "←";
+  margin-right: 8px;
+}
+
+.back-button.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@media (hover: hover) {
+  .back-button:hover {
+    color: var(--white);
+  }
+}
+
+.progress {
+  display: flex;
+  gap: 10px;
+}
+
+.progress-dot {
+  width: 22px;
+  height: 2px;
+  background: rgb(139 220 245 / 0.24);
+  transition: background 0.6s;
+}
+
+.progress-dot.done {
+  background: rgb(139 220 245 / 0.6);
+}
+
+.progress-dot.current {
+  background: var(--glow);
+}
+
+.warm .progress-dot.current {
+  background: var(--warm);
+}
+
+.scene-footer {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: max(20px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+/* ---------------- Scene 01 ---------------- */
+.story.active {
+  pointer-events: auto; /* a tap anywhere skips the pacing */
+}
+
+.story-copy {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  top: 15vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.story-line {
+  max-width: 34ch;
+  font-family: var(--display);
+  font-size: clamp(25px, 3.6vw, 40px);
+  line-height: 1.22;
+  font-style: italic;
+  color: var(--text);
+}
+
+.story-title {
+  margin-top: 12px;
+  font-family: var(--ui);
+  font-size: clamp(13px, 1.5vw, 16px);
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  margin-right: -0.34em;
+  color: var(--glow);
+}
+
+/* ---------------- Scene 02 ---------------- */
+.mountain-hint {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: rgb(234 243 250 / 0.66);
+}
+
+.tagline,
+.caption {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(23px, 3vw, 32px);
+  line-height: 1.2;
+  text-shadow: 0 2px 16px rgb(8 13 24 / 0.9);
+}
+
+.overlay {
+  pointer-events: none;
+}
+
+.marker {
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden; /* also keeps hidden lights out of the keyboard order */
+  transform-box: fill-box;
+  transform-origin: center;
+  outline: none;
+  transition: opacity 0.9s ease;
+  transition-delay: calc(var(--order) * 70ms);
+}
+
+[data-scene="2"] .marker {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Lights respond once the camera has settled, so a card never opens mid-flight. */
+.trail-on .marker {
+  pointer-events: auto;
+}
+
+[data-scene="3"] .marker {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.cake-state .marker,
+.cake-state .glyph {
+  visibility: hidden;
+}
+
+.hit {
+  fill: transparent;
+}
+
+.dot {
+  fill: var(--white);
+  transition: fill 0.25s, transform 0.25s;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.halo {
+  opacity: 0.8;
+  transition: opacity 0.25s, transform 0.25s;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.marker.active .dot,
+.marker:hover .dot {
+  fill: #fff;
+  transform: scale(1.7);
+}
+
+.marker.active .halo,
+.marker:hover .halo {
+  opacity: 1;
+  transform: scale(1.7);
+}
+
+.glow-points .dot {
+  transform: scale(1.5);
+}
+
+.glow-points .halo {
+  opacity: 1;
+  transform: scale(2);
+  transition-duration: 1.2s;
+}
+
+.trail,
+.trail-spark {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.trail {
+  stroke: var(--glow);
+  stroke-width: 1;
+  opacity: 0;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+}
+
+.trail-spark {
+  stroke: var(--white);
+  stroke-width: 1.6;
+  opacity: 0;
+  stroke-dasharray: 0.018 0.982;
+}
+
+.trail-on .trail {
+  opacity: 0.32;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 5.5s ease-in-out, opacity 1s;
+}
+
+.trail-on .trail-spark {
+  opacity: 0.8;
+}
+
+[data-scene="3"] .trail {
+  opacity: 0;
+}
+
+.glyphs {
+  pointer-events: none;
+}
+
+.glyph {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 1.2s;
+}
+
+.glyph text {
+  fill: var(--glow);
+  font-family: var(--math);
+  opacity: 0.42;
+}
+
+[data-scene="2"] .glyph,
+[data-scene="3"] .glyph {
+  opacity: 1;
+}
+
+.glow-points .glyph text {
+  opacity: 0.95;
+  transition: opacity 1.4s;
+}
+
+.info-card {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  width: min(340px, calc(100vw - 24px));
+  padding: 16px 18px;
+  background: rgb(10 18 32 / 0.9);
+  border: 1px solid rgb(139 220 245 / 0.34);
+  border-radius: 3px;
+  box-shadow: 0 16px 44px rgb(0 0 0 / 0.5);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+}
+
+.info-card.visible {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.card-topic {
+  font-size: 11px;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--glow);
+}
+
+.card-title {
+  margin-top: 5px;
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--white);
+}
+
+.card-text {
+  margin-top: 7px;
+  font-size: 15px;
+  line-height: 1.42;
+  color: rgb(234 243 250 / 0.88);
+}
+
+.card-formula {
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid rgb(139 220 245 / 0.18);
+  font-family: var(--math);
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--glow);
+  overflow-wrap: anywhere;
+}
+
+.card-formula sup,
+.card-formula sub {
+  font-size: 0.68em;
+  line-height: 0;
+}
+
+.script-stack {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  margin: 0 3px 0 1px;
+  line-height: 1.1;
+}
+
+.script-stack sup,
+.script-stack sub {
+  line-height: 1.05;
+}
+
+.card-source {
+  margin-top: 8px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgb(234 243 250 / 0.56);
+}
+
+/* ---------------- Scene 03 ---------------- */
+.morph-glow {
+  fill: url(#morph-light);
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+.morph-edge {
+  fill: none;
+  stroke: url(#morph-light);
+  stroke-width: 1.4;
+  opacity: 0;
+}
+
+.transformation .caption,
+.transformation .primary {
+  opacity: 0;
+  transition: opacity 1s ease, transform 1s ease;
+  pointer-events: none;
+}
+
+.transformation .caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 62px;
+  transform: translateY(6px);
+}
+
+.transformation .caption.in,
+.transformation .primary.in {
+  opacity: 1;
+  transform: none;
+}
+
+.transformation .primary.in {
+  pointer-events: auto;
+}
+
+.transformation .scene-footer {
+  height: 124px;
+  justify-content: flex-end;
+}
+
+/* ---------------- Candle and cake ---------------- */
+.candle {
+  pointer-events: none;
+  opacity: 0;
+  transform-box: view-box;
+  transform-origin: 500px 248px;
+  transform: scaleY(0.2);
+  transition: opacity 0.7s, transform 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.candle.candle-in {
+  opacity: 1;
+  transform: none;
+}
+
+.flame,
+.flame-halo {
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.candle.lit .flame,
+.candle.lit .flame-halo {
+  opacity: 1;
+}
+
+.cake-lit {
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+
+.cake-lit.on {
+  opacity: 1;
+}
+
+/* ---------------- Scene 04 ---------------- */
+.birthday {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: max(60px, calc(env(safe-area-inset-top) + 52px)) var(--gutter) max(22px, env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.thanks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.thanks-line {
+  font-family: var(--display);
+  font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.22;
+}
+
+.light-button {
+  margin-top: auto;
+  flex: none;
+}
+
+.birthday-heading {
+  display: none;
+  font-family: var(--display);
+  font-size: clamp(30px, 9.4vw, 88px);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--white);
+  text-shadow: 0 0 34px rgb(255 201 122 / 0.5);
+}
+
+.finale {
+  display: none;
+  margin-top: auto;
+  width: min(620px, 100%);
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.finale-to,
+.finale-sign {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 20px;
+  color: var(--warm);
+}
+
+.finale-line {
+  font-family: var(--display);
+  font-size: clamp(18px, 2.3vw, 22px);
+  line-height: 1.26;
+}
+
+.celebrating .thanks,
+.celebrating .light-button {
+  display: none;
+}
+
+.celebrating .birthday-heading {
+  display: block;
+  animation: rise 1.4s ease both;
+}
+
+.celebrating .finale {
+  display: flex;
+  animation: rise 1.6s ease 0.5s both;
+}
+
+.music-control {
+  margin-top: 4px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.music-control.visible {
+  display: flex;
+}
+
+.music-row {
+  display: flex;
+  gap: 6px;
+}
+
+.icon-button {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgb(255 217 166 / 0.4);
+  border-radius: 50%;
+  background: rgb(16 28 48 / 0.5);
+  transition: background 0.25s;
+}
+
+.icon-button[hidden],
+.manual-play[hidden],
+.music-note[hidden] {
+  display: none;
+}
+
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--white);
+}
+
+.icon-button[aria-label="Mute"] svg path,
+.icon-button[aria-label="Unmute"] svg path {
+  stroke: var(--white);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+@media (hover: hover) {
+  .icon-button:hover {
+    background: rgb(255 217 166 / 0.18);
+  }
+}
+
+.manual-play {
+  min-height: 44px;
+  padding: 0 18px;
+  font-size: 14px;
+  color: var(--warm);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.music-note {
+  font-size: 13px;
+  color: rgb(234 243 250 / 0.7);
+}
+
+/* ---------------- Short landscape phones: cake left, words right ---------------- */
+@media (max-height: 520px) {
+  .story-copy {
+    top: 56px;
+    gap: 8px;
+  }
+
+  .story-line {
+    font-size: 21px;
+    max-width: 60ch;
+  }
+
+  .story-title {
+    margin-top: 2px;
+  }
+
+  .mountain .scene-footer {
+    flex-direction: row;
+    justify-content: center;
+    bottom: 12px;
+  }
+
+  .mountain-hint {
+    display: none;
+  }
+
+  .tagline,
+  .caption {
+    font-size: 21px;
+  }
+
+  .transformation .scene-footer {
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    height: auto;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 16px;
+  }
+
+  .transformation .caption {
+    grid-area: 1 / 1;
+    position: static;
+  }
+
+  .birthday {
+    justify-content: center;
+    padding: 52px var(--gutter) 10px 50%;
+  }
+
+  .thanks {
+    gap: 6px;
+  }
+
+  .thanks-line {
+    font-size: 16px;
+  }
+
+  .light-button {
+    margin-top: 16px;
+  }
+
+  .birthday-heading {
+    font-size: 34px;
+  }
+
+  .finale {
+    margin-top: 8px;
+    width: 100%;
+    gap: 4px;
+  }
+
+  .finale-line {
+    font-size: 15px;
+    line-height: 1.18;
+  }
+
+  .icon-button {
+    width: 40px;
+    height: 40px;
+  }
+}

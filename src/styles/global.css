@@ -1,0 +1,126 @@
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("./fonts/cormorant-garamond-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("./fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("./fonts/cormorant-garamond-latin-400-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Jost";
+  src: url("./fonts/jost-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Jost";
+  src: url("./fonts/jost-latin-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #080d18;
+  --navy: #101c30;
+  --shadow: #182941;
+  --cyan: #36c5f0;
+  --glow: #8bdcf5;
+  --text: #eaf3fa;
+  --white: #f5f8fc;
+  --warm: #ffd9a6;
+  --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --ui: "Jost", "Segoe UI", system-ui, sans-serif;
+  --math: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Noto Serif", "Times New Roman", serif;
+  --gutter: 16px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--ui);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  overflow: clip; /* hidden still lets focus scroll this layer; clip does not */
+  isolation: isolate;
+}
+
+#app > * {
+  position: absolute;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+  font-weight: 400;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 3px;
+}
+
+.primary {
+  min-height: 46px;
+  min-width: 148px;
+  padding: 0 28px;
+  font-family: var(--ui);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: rgb(16 28 48 / 0.6);
+  border: 1px solid rgb(139 220 245 / 0.55);
+  border-radius: 2px;
+  backdrop-filter: blur(6px);
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+
+@media (hover: hover) {
+  .primary:hover {
+    background: rgb(54 197 240 / 0.2);
+    border-color: var(--glow);
+  }
+}

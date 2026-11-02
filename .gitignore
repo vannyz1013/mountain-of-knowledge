@@ -1,0 +1,17 @@
+node_modules/
+dist/
+__pycache__/
+*.log
+
+# Local files that are not part of this site.
+public/images/cover/
+public/images/memories/
+public/images/decorations/
+public/images/birthday/cake.webp
+public/images/birthday/bunting.webp
+public/images/birthday/envelope-*.webp
+public/images/birthday/flowers-*.webp
+public/images/birthday/wax-seal.webp
+tools/paint/
+tools/song/encode_mp3.mjs
+tools/song/make_song.py

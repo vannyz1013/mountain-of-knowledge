@@ -1,0 +1,124 @@
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(-5%);
+  }
+  to {
+    transform: translateX(5%);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1, 1) skewX(0deg);
+  }
+  30% {
+    transform: scale(0.96, 1.05) skewX(-1.4deg);
+  }
+  60% {
+    transform: scale(1.03, 0.97) skewX(1.2deg);
+  }
+}
+
+@keyframes halo-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+}
+
+@keyframes spark-climb {
+  from {
+    stroke-dashoffset: 1.02;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.scene.active .reveal {
+  animation: rise 1.5s cubic-bezier(0.2, 0.6, 0.3, 1) var(--delay, 0s) both;
+}
+
+.scene.skip .reveal {
+  animation-delay: 0s;
+  animation-duration: 0.4s;
+}
+
+.fog-a {
+  animation: drift 46s ease-in-out infinite alternate;
+}
+
+.fog-b {
+  animation: drift 64s ease-in-out infinite alternate-reverse;
+}
+
+.breathes .halo {
+  animation: breathe 5.5s ease-in-out infinite;
+}
+
+.trail-on .trail-spark {
+  animation: spark-climb 9s linear 2s infinite;
+}
+
+.flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.candle.lit .flame {
+  animation: flicker 1.5s ease-in-out infinite;
+}
+
+.flame-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.candle.lit .flame-halo {
+  animation: halo-pulse 3.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.3s !important;
+    transition-delay: 0s !important;
+  }
+
+  .trail-spark {
+    display: none;
+  }
+
+  .trail-on .trail {
+    stroke-dashoffset: 0;
+  }
+}
