@@ -140,19 +140,25 @@ export class Stage {
     };
     const placed: { x: number; y: number }[] = [];
     for (let i = 0; placed.length < surfaceGlyphs.length * 2 && i < 2000; i++) {
-      const x = 130 + random() * 740;
+      const x = 175 + random() * 650;
       const y = 140 + random() * 470;
       if (y < top(x) + 26) continue;
       if (placed.some((p) => Math.hypot((p.x - x) * 0.6, p.y - y) < 44)) continue;
       placed.push({ x, y });
+      const label = surfaceGlyphs[placed.length % surfaceGlyphs.length];
+      const size = 12 + random() * 8;
+      const turn = (random() - 0.5) * 34;
+      // The text runs rightward from x, so on the falling right flank its end can
+      // leave the rock. Such a spot stays in `placed`, keeping every other glyph put.
+      if (y < top(x + [...label].length * size * 0.5) + 14) continue;
       const group = svg("g", { class: "glyph" });
       const text = svg("text", {
         x,
         y,
-        "font-size": 12 + random() * 8,
-        transform: `rotate(${(random() - 0.5) * 34} ${x} ${y})`,
+        "font-size": size,
+        transform: `rotate(${turn} ${x} ${y})`,
       });
-      text.textContent = surfaceGlyphs[placed.length % surfaceGlyphs.length];
+      text.textContent = label;
       group.append(text);
       group.dataset.x = String(x);
       group.dataset.y = String(y);

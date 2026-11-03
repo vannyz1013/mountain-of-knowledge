@@ -18,8 +18,20 @@
   width: 110vmax;
   height: 90vh;
   transform: translateX(-50%);
-  background: radial-gradient(closest-side, rgb(139 220 245 / 0.13), transparent);
   transition: opacity 2s;
+}
+
+/*
+ * The light itself is a child, so its slow variation can't override the warm-scene fade.
+ * --moon is stepped by the particle loop (main.ts), not a CSS animation, which would
+ * restyle the page on every frame for a change too slow to see frame to frame.
+ */
+.moon-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(closest-side, rgb(139 220 245 / 0.13), transparent);
+  opacity: var(--moon, 1);
 }
 
 .warm-glow {
@@ -41,9 +53,16 @@
   opacity: 0.35;
 }
 
+.parallax > .ridges,
+.parallax > #world,
+.parallax > .fog,
+.parallax > #stars {
+  will-change: translate;
+}
+
 .ridges {
-  left: 0;
-  right: 0;
+  left: -24px; /* spare width, so parallax never exposes an edge */
+  right: -24px;
   bottom: 0;
   height: 48vh;
   background: url("/images/mountain/ridges.webp") center bottom / auto 100% repeat-x;
@@ -297,39 +316,52 @@
   fill: transparent;
 }
 
+/*
+ * The proximity glow (--near, eased frame by frame in pointerEffects.ts) grows a light
+ * through `scale`, which is never transitioned, so its small steps can't each restart
+ * the 0.25s transform transition. The state rules below divide that growth back out,
+ * so hover, focus and the charge-up still land on exactly 1.7, 1.5 and 2.
+ */
 .dot {
   fill: var(--white);
+  scale: calc(1 + var(--near, 0) * 0.45);
   transition: fill 0.25s, transform 0.25s;
   transform-box: fill-box;
   transform-origin: center;
 }
 
 .halo {
-  opacity: 0.8;
+  opacity: calc(0.8 + var(--near, 0) * 0.2);
+  scale: calc(1 + var(--near, 0) * 0.85);
   transition: opacity 0.25s, transform 0.25s;
   transform-box: fill-box;
   transform-origin: center;
 }
 
+/* While a light wakes, its opacity is already eased in script. */
+.waking .halo {
+  transition-property: transform;
+}
+
 .marker.active .dot,
 .marker:hover .dot {
   fill: #fff;
-  transform: scale(1.7);
+  transform: scale(calc(1.7 / (1 + var(--near, 0) * 0.45)));
 }
 
 .marker.active .halo,
 .marker:hover .halo {
   opacity: 1;
-  transform: scale(1.7);
+  transform: scale(calc(1.7 / (1 + var(--near, 0) * 0.85)));
 }
 
 .glow-points .dot {
-  transform: scale(1.5);
+  transform: scale(calc(1.5 / (1 + var(--near, 0) * 0.45)));
 }
 
 .glow-points .halo {
   opacity: 1;
-  transform: scale(2);
+  transform: scale(calc(2 / (1 + var(--near, 0) * 0.85)));
   transition-duration: 1.2s;
 }
 

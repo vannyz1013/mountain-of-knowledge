@@ -21,7 +21,7 @@
 @keyframes breathe {
   0%,
   100% {
-    opacity: 0.45;
+    opacity: max(0.45, var(--near, 0));
   }
   50% {
     opacity: 1;

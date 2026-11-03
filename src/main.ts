@@ -8,6 +8,7 @@ import { MusicControl } from "./components/MusicControl";
 import { SceneNavigation } from "./components/SceneNavigation";
 import { knowledgePoints } from "./data/knowledgeData";
 import { Particles } from "./particles";
+import { PointerEffects } from "./pointerEffects";
 import { BirthdayScene } from "./scenes/BirthdayScene";
 import { MountainScene } from "./scenes/MountainScene";
 import { StoryScene } from "./scenes/StoryScene";
@@ -67,6 +68,22 @@ window.addEventListener("resize", () => {
     knowledge.clear();
     scenes[index]?.refit?.();
   }, 120);
+});
+
+new PointerEffects(app, stage, knowledge.markers, particles);
+
+// Moonlight swells and settles over 19s each way. It is stepped in the shared loop
+// and only written when it changes by 0.01, about twice a second. Under reduced motion
+// the loop never starts, so the moon simply stays at full strength.
+const moon = app.querySelector(".moon-glow") as HTMLElement;
+let moonShown = "";
+particles.onFrame((_, now) => {
+  const t = (now / 19000) % 2;
+  const swing = (1 - Math.cos(Math.PI * (t < 1 ? t : 2 - t))) / 2;
+  const value = (0.74 + 0.26 * swing).toFixed(2);
+  if (value === moonShown) return;
+  moonShown = value;
+  moon.style.setProperty("--moon", value);
 });
 
 goTo(0);
