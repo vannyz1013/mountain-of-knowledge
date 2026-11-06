@@ -15,3 +15,9 @@ public/images/birthday/wax-seal.webp
 tools/paint/
 tools/song/encode_mp3.mjs
 tools/song/make_song.py
+
+# Scratch photos and temporary work in the project root.
+/*.jpeg
+/*.jpg
+/*.png
+tmp/
